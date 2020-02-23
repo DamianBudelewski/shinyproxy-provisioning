@@ -13,7 +13,7 @@ resource "azurerm_virtual_network" "shinyappnetwork" {
     name                = "shinyappVnet"
     address_space       = ["10.0.0.0/16"]
     resource_group_name = azurerm_resource_group.shinyapprg.name
-    location 		= azurerm_resource_group.shinyapprg.location
+    location		= azurerm_resource_group.shinyapprg.location
 }
 
 # Create subnet. Define creating vnet before subnet by refering network name in subnet definition
@@ -30,14 +30,14 @@ resource "azurerm_public_ip" "shinyapppublicip" {
     allocation_method	= "Dynamic"
     domain_name_label	= var.shinyapp["fqdn"]
     resource_group_name	= azurerm_resource_group.shinyapprg.name
-    location 		= azurerm_resource_group.shinyapprg.location
+    location		= azurerm_resource_group.shinyapprg.location
 }
 
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "shinyappnsg" {
-    name 		= "shinyappnsg"
+    name		= "shinyappnsg"
     resource_group_name	= azurerm_resource_group.shinyapprg.name
-    location 		= azurerm_resource_group.shinyapprg.location
+    location		= azurerm_resource_group.shinyapprg.location
     
     security_rule {
         name                       = "SSH"
@@ -80,14 +80,14 @@ resource "azurerm_network_security_group" "shinyappnsg" {
 resource "azurerm_network_interface" "shinyappnic" {
     name			= "shinyappNIC"
     resource_group_name		= azurerm_resource_group.shinyapprg.name
-    location 			= azurerm_resource_group.shinyapprg.location
+    location			= azurerm_resource_group.shinyapprg.location
     network_security_group_id	= azurerm_network_security_group.shinyappnsg.id
 
     ip_configuration {
-        name                          = "shinyappNicConfiguration"
-        subnet_id                     = azurerm_subnet.shinyappsubnet.id
-        private_ip_address_allocation = "Dynamic"
-        public_ip_address_id          = azurerm_public_ip.shinyapppublicip.id
+        name				= "shinyappNicConfiguration"
+        subnet_id			= azurerm_subnet.shinyappsubnet.id
+        private_ip_address_allocation	= "Dynamic"
+        public_ip_address_id		= azurerm_public_ip.shinyapppublicip.id
     }
 }
 
@@ -105,7 +105,7 @@ resource "random_id" "randomId" {
 resource "azurerm_storage_account" "shinyappstorageaccount" {
     name                        = "diag${random_id.randomId.hex}"
     resource_group_name		= azurerm_resource_group.shinyapprg.name
-    location 			= azurerm_resource_group.shinyapprg.location
+    location			= azurerm_resource_group.shinyapprg.location
     account_tier                = "Standard"
     account_replication_type    = "LRS"
 }
@@ -142,13 +142,13 @@ resource "azurerm_virtual_machine" "shinyappvm" {
     os_profile_linux_config {
         disable_password_authentication = true
         ssh_keys {
-            key_data = file("~/.ssh/id_rsa.pub")
-            path = "/home/dbudelewski/.ssh/authorized_keys"
+            key_data	= file("~/.ssh/id_rsa.pub")
+            path	= "/home/dbudelewski/.ssh/authorized_keys"
         }
     }
 
     boot_diagnostics {
-        enabled = "true"
-        storage_uri = azurerm_storage_account.shinyappstorageaccount.primary_blob_endpoint
+        enabled		= "true"
+        storage_uri	= azurerm_storage_account.shinyappstorageaccount.primary_blob_endpoint
     }
 }
