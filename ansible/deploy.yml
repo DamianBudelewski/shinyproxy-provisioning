@@ -1,0 +1,8 @@
+---
+
+- name: ShinyProxy installation
+  gather_facts: false
+  hosts: proxy
+  roles:
+    - shinyproxy
+...

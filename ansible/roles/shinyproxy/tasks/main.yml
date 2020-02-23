@@ -1,0 +1,125 @@
+---
+
+- name: install java 1.8.0 openjdk
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+  become: true
+
+- name: install required packages for docker environment
+  yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+  become: true
+
+- name: add Docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+  become: yes
+
+- name: install the latest version of docker engine - community
+  yum:
+    name:
+      - docker-ce 
+      - docker-ce-cli 
+      - containerd.io
+    state: present
+  become: true
+
+- name: make directory for docker systemd service configuration
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+
+- name: create override.conf for docker service to change startup options 
+  template:
+    src: override.conf
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: restart docker service, also issue daemon-reload to pick up config changes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+  become: true
+
+- name: enable docker service on boot
+  systemd:
+    state: enabled
+    name: docker
+  become: true
+
+- name: add the user shinyproxy 
+  user:
+    name: shinyproxy
+    group: docker
+    append: yes
+  become: true
+
+- name: make directory for ShinyProxy application
+  file:
+    path: /opt/shinyproxy
+    state: directory
+    owner: shinyproxy
+    mode: '0755'
+  become: true
+
+- name: upload shinyproxy configuration file - application.yml to /opt/shinyproxy
+  template:
+    src: application.yml
+    dest: /opt/shinyproxy/application.yml
+    owner: shinyproxy
+    group: shinyproxy
+    mode: '0644'
+  become: true
+
+- name: download ShinyProxy
+  get_url:
+    url: wget https://www.shinyproxy.io/downloads/shinyproxy_2.3.0_x86_64.rpm
+    dest: /opt/shinyproxy
+  become: true
+
+- name: install shinyproxy rpm package
+  yum:
+    name: /opt/shinyproxy/shinyproxy_2.3.0_x86_64.rpm
+    state: present
+  become: true
+
+- name: install python docker module
+  pip:
+    name: docker
+  become: true
+
+- name: pull an demo image
+  docker_image:
+    name: openanalytics/shinyproxy-demo
+    source: pull
+  become: true
+  become_user: shinyproxy
+
+- name: start ShinyProxy systemd service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: shinyproxy
+  become: true
+
+- name: enable ShinyProxy systemd service on boot
+  systemd:
+    state: enabled
+    name: shinyproxy
+  become: true
+
+...
