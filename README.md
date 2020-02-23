@@ -10,7 +10,10 @@ Tools used in this project:
 
 URL of Azure Container Registry with app image: `shinyappsacr.azurecr.io/shinyapps/nycmetrovis`
 
-
+### TODO
+- [ ] Ansible role for nginx deployment
+- [ ] Configure terraform to parse output variables into ansible vars file.
+- [ ] Create Azure DevOps pipeline for building app, creating infrastructure and running ansible playbook.
 
 ### Links
 * [Shiny app used in this project](https://github.com/CodingTigerTang/NYC_Metro_Vis)
