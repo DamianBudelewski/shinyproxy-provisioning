@@ -88,7 +88,7 @@
 - name: download ShinyProxy
   get_url:
     url: https://www.shinyproxy.io/downloads/shinyproxy_2.3.0_x86_64.rpm
-    dest: /opt/shinyproxy
+    dest: /opt/shinyproxy/shinyproxy_2.3.0_x86_64.rpm
   become: true
 
 - name: install shinyproxy rpm package
@@ -97,10 +97,14 @@
     state: present
   become: true
 
+- name: install python setuptools library
+  pip:
+    name: setuptools
+  become: true
+
 - name: install python docker module
   pip:
     name: 
-    - setuptools
     - docker
   become: true
 
