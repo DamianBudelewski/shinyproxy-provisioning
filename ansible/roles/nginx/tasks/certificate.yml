@@ -1,26 +1,26 @@
-- name: create private ec key
-  openssl_privatekey:
-    path: /etc/pki/cert/private/{{ shinyproxy.domain_name }}.key
-    type: ECC
+#- name: create private ec key
+#  openssl_privatekey:
+#    path: /etc/pki/cert/private/{{ shinyproxy.domain_name }}.key
+#    type: ECC
+#
+#- name: create a challenge for "{{ shinyproxy.domain_name }}" using a account key from a variable.
+#  acme_certificate:
+#    account_key_src: /etc/pki/cert/private/{{ shinyproxy.domain_name }}.key
+#    csr: /etc/pki/cert/csr/{{ shinyproxy.domain_name }}.csr
+#    dest: /etc/ssl/certs/{{ shinyproxy.domain_name }}.crt
+#  register: {{ shinyproxy.domain_name }}_challenge
 
-- name: create a challenge for "{{ shinyproxy.domain_name }}" using a account key from a variable.
-  acme_certificate:
-    account_key_src: /etc/pki/cert/private/{{ shinyproxy.domain_name }}.key
-    csr: /etc/pki/cert/csr/{{ shinyproxy.domain_name }}.csr
-    dest: /etc/ssl/certs/{{ shinyproxy.domain_name }}.crt
-  register: {{ shinyproxy.domain_name }}_challenge
-
-  ## perform the necessary steps to fulfill the challenge
-  #- copy:
-  #    dest: /var/www/html/{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource'] }}
-  #    content: "{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource_value'] }}"
-  #    when: sample_com_challenge is changed
-  #
-  #- name: Let the challenge be validated and retrieve the cert and intermediate certificate
-  #  acme_certificate:
-  #    account_key_src: /etc/pki/cert/private/account.key
-  #    csr: /etc/pki/cert/csr/sample.com.csr
-  #    dest: /etc/httpd/ssl/sample.com.crt
-  #    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
-  #    chain_dest: /etc/httpd/ssl/sample.com-intermediate.crt
-  #    data: "{{ sample_com_challenge }}"
+## perform the necessary steps to fulfill the challenge
+#- copy:
+#    dest: /var/www/html/{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource'] }}
+#    content: "{{ sample_com_challenge['challenge_data']['sample.com']['http-01']['resource_value'] }}"
+#    when: sample_com_challenge is changed
+#
+#- name: Let the challenge be validated and retrieve the cert and intermediate certificate
+#  acme_certificate:
+#    account_key_src: /etc/pki/cert/private/account.key
+#    csr: /etc/pki/cert/csr/sample.com.csr
+#    dest: /etc/httpd/ssl/sample.com.crt
+#    fullchain_dest: /etc/httpd/ssl/sample.com-fullchain.crt
+#    chain_dest: /etc/httpd/ssl/sample.com-intermediate.crt
+#    data: "{{ sample_com_challenge }}"

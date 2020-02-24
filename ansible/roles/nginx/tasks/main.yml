@@ -25,6 +25,3 @@
     name: ngixn
     masked: no
   become: true
-
-- name: create ssl certificate
-  import_role: certificate.yml
