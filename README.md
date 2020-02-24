@@ -41,3 +41,4 @@ This step is fully automated with ansible playbooks. All you have to do, is to i
 * [Example of VM deployment using terraform](https://docs.microsoft.com/en-us/azure/terraform/terraform-create-complete-vm)
 * [Terraform variables introduction](https://upcloud.com/community/tutorials/terraform-variables/)
 * [Ansible deployment with Azure DevOps](https://www.azuredevopslabs.com/labs/vstsextend/ansible/)
+* [OAuth authentication](https://auth0.com/blog/adding-authentication-to-shiny-server/)
