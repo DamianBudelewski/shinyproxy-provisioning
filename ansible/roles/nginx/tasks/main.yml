@@ -1,0 +1,25 @@
+- name: install nginx service
+  yum:
+    name: nginx
+    state: present
+  become: true
+
+- name: create nginx config file
+  template:
+    src: shinyproxy.conf.j2
+    dest: "/etc/nginx/sites-available/{{ shinyproxy.domain_name }}.conf"
+  become: true
+
+- name: restart docker service, also issue daemon-reload to pick up config changes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: nginx
+  become: true
+
+- name: enable nginx service on boot
+  systemd:
+    enabled: yes
+    name: ngixn
+    masked: no
+  become: true
