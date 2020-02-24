@@ -2,7 +2,7 @@
 
 - name: ShinyProxy installation
   gather_facts: false
-  hosts: shinyproxyvm
+  hosts: shinyproxy
   roles:
     - shinyproxy
 ...

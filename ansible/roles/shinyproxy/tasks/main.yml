@@ -57,8 +57,9 @@
 
 - name: enable docker service on boot
   systemd:
-    state: enabled
+    enabled: yes
     name: docker
+    masked: no
   become: true
 
 - name: add the user shinyproxy 
@@ -81,13 +82,12 @@
     src: application.yml
     dest: /opt/shinyproxy/application.yml
     owner: shinyproxy
-    group: shinyproxy
     mode: '0644'
   become: true
 
 - name: download ShinyProxy
   get_url:
-    url: wget https://www.shinyproxy.io/downloads/shinyproxy_2.3.0_x86_64.rpm
+    url: https://www.shinyproxy.io/downloads/shinyproxy_2.3.0_x86_64.rpm
     dest: /opt/shinyproxy
   become: true
 
@@ -99,7 +99,9 @@
 
 - name: install python docker module
   pip:
-    name: docker
+    name: 
+    - setuptools
+    - docker
   become: true
 
 - name: pull an demo image
@@ -118,8 +120,9 @@
 
 - name: enable ShinyProxy systemd service on boot
   systemd:
-    state: enabled
     name: shinyproxy
+    enabled: yes
+    masked: no
   become: true
 
 ...

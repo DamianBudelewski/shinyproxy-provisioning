@@ -19,7 +19,7 @@ proxy:
     - id: nyc_metro_vis
       display-name: Animated NYC metro traffic
       container-cmd: ["R", "-e", "shiny::runApp('/root/NYC_Metro_Vis')"]
-      container-image: shinyappsacr.azurecr.io/shinyapps/nycmetrovis
+      container-image: shinyappsacr.azurecr.io/nycmetrovis
 
 logging:
   file:
