@@ -14,6 +14,8 @@ URL of Azure Container Registry with app image: `shinyappsacr.azurecr.io/shinyap
 - [ ] Ansible role for nginx deployment
 - [ ] Configure terraform to parse output variables into ansible vars file.
 - [ ] Create Azure DevOps pipeline for building app and deploying image to ACR.
+- [ ] Auth0.
+- [ ] Nginx SSL Proxy.
 
 ### Links
 * [Shiny app used in this project](https://github.com/CodingTigerTang/NYC_Metro_Vis)
