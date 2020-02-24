@@ -6,3 +6,7 @@ data "azurerm_public_ip" "shinyapppublicip" {
 output "public_ip_address" {
     value		= data.azurerm_public_ip.shinyapppublicip.ip_address
 }
+
+output "fqdn" {
+    value		= data.azurerm_public_ip.shinyapppublicip.fqdn
+}
