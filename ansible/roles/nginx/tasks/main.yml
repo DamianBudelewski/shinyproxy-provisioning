@@ -6,15 +6,28 @@
     state: present
   become: true
 
+- name: Ensure python OpenSSL dependencies are installed.
+  pip:
+    name: pyOpenSSL
+    state: present
+  become: true
+
+- name: set httpd_can_network_connect flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+  become: true
+
 - name: check if ssl private directory exists
   stat:
     path: /etc/ssl/private
-    register: private_folder
+  register: private_folder
 
 - name: check if ssl certs directory exists
   stat:
     path: /etc/ssl/certs
-    register: certs_folder
+  register: certs_folder
 
 - name: create private directorie in etc ssl path
   file:
@@ -39,12 +52,14 @@
 - name: generate an OpenSSL private key.
   openssl_privatekey:
     path: /etc/ssl/private/{{ domain_name }}.key
+  become: true
 
 - name: generate an OpenSSL CSR.
   openssl_csr:
     path: /etc/ssl/certs/{{ domain_name }}.csr
     privatekey_path: /etc/ssl/private/{{ domain_name }}.key
     common_name: "{{ domain_name }}"
+  become: true
 
 - name: generate a Self Signed OpenSSL certificate
   openssl_certificate:
@@ -52,11 +67,12 @@
     privatekey_path: /etc/ssl/private/{{ domain_name }}.key
     csr_path: /etc/ssl/certs/{{ domain_name }}.csr
     provider: selfsigned
+  become: true
 
 - name: create nginx config file
   template:
     src: shinyproxy.conf.j2
-    dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
+    dest: "/etc/nginx/conf.d/{{ domain_name }}.conf"
   become: true
 
 - name: restart nginx service, also issue daemon-reload to pick up config changes
@@ -69,6 +85,6 @@
 - name: enable nginx service on boot
   systemd:
     enabled: yes
-    name: ngixn
+    name: nginx
     masked: no
   become: true

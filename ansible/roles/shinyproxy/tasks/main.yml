@@ -88,7 +88,7 @@
 - name: upload shinyproxy configuration file - application.yml to /opt/shinyproxy
   template:
     src: application.yml
-    dest: /opt/shinyproxy/application.yml
+    dest: /etc/shinyproxy/application.yml
     owner: shinyproxy
     mode: '0644'
   become: true
@@ -110,9 +110,15 @@
     name: docker
   become: true
 
-- name: pull an demo image
+- name: log into azure container registry
+  docker_login:
+    registry: {{ acr_registry }}
+    username: {{ acr_username }}
+    password: {{ acr_password }}
+
+- name: pull shiny app docker image
   docker_image:
-    name: openanalytics/shinyproxy-demo
+    name: {{ acr_image }}
     source: pull
   become: true
   become_user: shinyproxy
@@ -131,4 +137,7 @@
     masked: no
   become: true
 
+- name: log out of DockerHub
+  docker_login:
+    state: absent
 ...

@@ -5,16 +5,15 @@ server {
 }
 
 server {
-  listen                443;
+  listen                443 ssl;
   server_name           {{ domain_name }};
   access_log            /var/log/nginx/{{ domain_name }}.access.log;
   error_log             /var/log/nginx/{{ domain_name }}.error.log error;
 
-  ssl on;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
-  ssl_certificate       /etc/ssl/certs/{{ domain_name }}.com.crt;
-  ssl_certificate_key   /etc/ssl/private/{{ domain_name }}.com.key;
+  ssl_certificate       /etc/ssl/certs/{{ domain_name }}.crt;
+  ssl_certificate_key   /etc/ssl/private/{{ domain_name }}.key;
 
    location / {
        proxy_pass          http://127.0.0.1:8080/;

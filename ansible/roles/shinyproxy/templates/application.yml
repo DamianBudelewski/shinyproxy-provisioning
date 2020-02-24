@@ -4,14 +4,7 @@ proxy:
   bind-address: 127.0.0.1
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
-  authentication: simple
   admin-groups: admins
-  users:
-  - name: jack
-    password: password
-    groups: admins
-  - name: jeff
-    password: password
   docker:
     cert-path: /home/none
     url: http://localhost:2375
@@ -19,7 +12,7 @@ proxy:
   specs:
     - id: nyc_metro_vis
       display-name: Animated NYC metro traffic
-      container-cmd: ["R", "-e", "shiny::runApp('/root/NYC_Metro_Vis')"]
+      container-cmd: ["R", "-e", "shiny::runApp('/root/nyc_metro_vis')"]
       container-image: shinyappsacr.azurecr.io/nycmetrovis
 
 server:
