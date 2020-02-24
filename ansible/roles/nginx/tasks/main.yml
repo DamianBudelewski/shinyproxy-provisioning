@@ -6,7 +6,17 @@
     state: present
   become: true
 
-- name: create private and certs directories in etc ssl path
+- name: check if ssl private directory exists
+  stat:
+    path: /etc/ssl/private
+    register: private_folder
+
+- name: check if ssl certs directory exists
+  stat:
+    path: /etc/ssl/certs
+    register: certs_folder
+
+- name: create private directorie in etc ssl path
   file:
     path: /etc/ssl/private
     state: directory
@@ -14,15 +24,19 @@
     group: root
     mode: 0710
   become: true
+  when: private_folder.stat.exists == false
+
+- name: create certs directorie in etc ssl path
+  file:
+    path: /etc/ssl/certs
+    state: directory
+    owner: root
+    group: root
+    mode: 0750
+  become: true
+  when: certs_folder.stat.exists == false
 
 - name: generate an OpenSSL private key.
-  file:
-    path: /etc/ssl/private
-    state: directory
-    owner: root
-    group: root
-    mode: 0710
-  become: true
   openssl_privatekey:
     path: /etc/ssl/private/{{ domain_name }}.key
 
