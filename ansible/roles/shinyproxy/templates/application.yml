@@ -1,6 +1,7 @@
 proxy:
   title: Animated NYC metro traffic
   port: 8080
+  bind-address: 127.0.0.1
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
   authentication: simple
@@ -20,6 +21,9 @@ proxy:
       display-name: Animated NYC metro traffic
       container-cmd: ["R", "-e", "shiny::runApp('/root/NYC_Metro_Vis')"]
       container-image: shinyappsacr.azurecr.io/nycmetrovis
+
+server:
+  useForwardHeaders: true
 
 logging:
   file:
