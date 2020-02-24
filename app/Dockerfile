@@ -18,11 +18,11 @@ RUN apt-get update && apt-get install -y \
 RUN R -e "install.packages(c('shiny','tidyverse','leaflet','lubridate','promises','future'))"
 
 # copy the app to the image
-RUN mkdir /root/NYC_Metro_Vis
-COPY NYC_Metro_Vis /root/NYC_Metro_Vis
+RUN mkdir /root/nyc_metro_vis
+COPY app-files /root/nyc_metro_vis
 
 COPY Rprofile.site /usr/lib/R/etc/
 
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/NYC_Metro_Vis')"]
+CMD ["R", "-e", "shiny::runApp('/root/nyc_metro_vis')"]
