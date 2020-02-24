@@ -16,7 +16,7 @@ URL of Azure Container Registry with app image: `shinyappsacr.azurecr.io/shinyap
 ### 1. Building application
 
 ### 2. Creating infrastructure 
-	Start with moving into terraform directory `cd terraform`. Initialize working directory with `terraform init` command. You should see information simmilar to this `Terraform has been successfully initialized!`. Now you can create execution plan with `terraform plan` command. After a while you should see quite big output in which you can see every resource that is planned to be deployed. In our case it's 9 resources `Plan: 9 to add, 0 to change, 0 to destroy`. Last what we have to do is to apply this plan with cmd `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
+Start with moving into terraform directory `cd terraform`. Initialize working directory with `terraform init` command. You should see information simmilar to this `Terraform has been successfully initialized!`. Now you can create execution plan with `terraform plan` command. After a while you should see quite big output in which you can see every resource that is planned to be deployed. In our case it's 9 resources `Plan: 9 to add, 0 to change, 0 to destroy`. Last what we have to do is to apply this plan with cmd `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
 
 ```bash
 Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
@@ -28,7 +28,7 @@ fqdn = nycvisshinyapp.westeurope.cloudapp.azure.com
 ```
 
 ### 3. Provisioning and application deployment
-	This step is fully automated with ansible playbooks. All you have to do, is to input variables from terraform to `ansible/hosts.yml` file and run `ansible-playbook -i hosts.yml deploy.yml`. This will prepare server with installation of shinyproxy, docker and ngixn with proper configuration. At the end, it will start shinyproxy and nginx service.
+This step is fully automated with ansible playbooks. All you have to do, is to input variables from terraform to `ansible/hosts.yml` file and run `ansible-playbook -i hosts.yml deploy.yml`. This will prepare server with installation of shinyproxy, docker and ngixn with proper configuration. At the end, it will start shinyproxy and nginx service.
 
 ## TODO
 - [ ] Ansible role for nginx deployment
