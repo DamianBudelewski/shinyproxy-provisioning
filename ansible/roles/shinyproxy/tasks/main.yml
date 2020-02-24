@@ -6,12 +6,20 @@
     state: present
   become: true
 
+- name: enable epel repo
+  yum:
+    name: epel-release
+    state: present
+  become: true
+
 - name: install required packages for docker environment
   yum:
     name:
       - yum-utils
       - device-mapper-persistent-data
       - lvm2
+      - python-setuptools
+      - python-pip
     state: present
   become: true
 
@@ -97,15 +105,9 @@
     state: present
   become: true
 
-- name: install python setuptools library
-  pip:
-    name: setuptools
-  become: true
-
 - name: install python docker module
   pip:
-    name: 
-    - docker
+    name: docker
   become: true
 
 - name: pull an demo image
