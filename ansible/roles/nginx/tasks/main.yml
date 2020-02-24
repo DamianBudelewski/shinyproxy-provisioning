@@ -6,27 +6,43 @@
     state: present
   become: true
 
-- name: Generate an OpenSSL private key.
+- name: create private and certs directories in etc ssl path
+  file:
+    path: /etc/ssl/private
+    state: directory
+    owner: root
+    group: root
+    mode: 0710
+  become: true
+
+- name: generate an OpenSSL private key.
+  file:
+    path: /etc/ssl/private
+    state: directory
+    owner: root
+    group: root
+    mode: 0710
+  become: true
   openssl_privatekey:
-    path: /etc/ssl/private/{{ shinyproxy.domain_name }}.key
+    path: /etc/ssl/private/{{ domain_name }}.key
 
-- name: Generate an OpenSSL CSR.
+- name: generate an OpenSSL CSR.
   openssl_csr:
-    path: /etc/ssl/certs/{{ shinyproxy.domain_name }}.csr
-    privatekey_path: /etc/ssl/private/{{ shinyproxy.domain_name }}.key
-    common_name: "{{ shinyproxy.domain_name }}"
+    path: /etc/ssl/certs/{{ domain_name }}.csr
+    privatekey_path: /etc/ssl/private/{{ domain_name }}.key
+    common_name: "{{ domain_name }}"
 
-- name: Generate a Self Signed OpenSSL certificate
+- name: generate a Self Signed OpenSSL certificate
   openssl_certificate:
-    path: /etc/ssl/certs/{{ shinyproxy.domain_name }}.crt
-    privatekey_path: /etc/ssl/private/{{ shinyproxy.domain_name }}.key
-    csr_path: /etc/ssl/certs/{{ shinyproxy.domain_name }}.csr
+    path: /etc/ssl/certs/{{ domain_name }}.crt
+    privatekey_path: /etc/ssl/private/{{ domain_name }}.key
+    csr_path: /etc/ssl/certs/{{ domain_name }}.csr
     provider: selfsigned
 
 - name: create nginx config file
   template:
     src: shinyproxy.conf.j2
-    dest: "/etc/nginx/sites-available/{{ shinyproxy.domain_name }}.conf"
+    dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
   become: true
 
 - name: restart nginx service, also issue daemon-reload to pick up config changes
