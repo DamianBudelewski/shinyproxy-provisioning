@@ -6,6 +6,23 @@
     state: present
   become: true
 
+- name: Generate an OpenSSL private key.
+  openssl_privatekey:
+    path: /etc/ssl/private/{{ shinyproxy.domain_name }}.key
+
+- name: Generate an OpenSSL CSR.
+  openssl_csr:
+    path: /etc/ssl/certs/{{ shinyproxy.domain_name }}.csr
+    privatekey_path: /etc/ssl/private/{{ shinyproxy.domain_name }}.key
+    common_name: "{{ shinyproxy.domain_name }}"
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: /etc/ssl/certs/{{ shinyproxy.domain_name }}.crt
+    privatekey_path: /etc/ssl/private/{{ shinyproxy.domain_name }}.key
+    csr_path: /etc/ssl/certs/{{ shinyproxy.domain_name }}.csr
+    provider: selfsigned
+
 - name: create nginx config file
   template:
     src: shinyproxy.conf.j2
@@ -25,10 +42,3 @@
     name: ngixn
     masked: no
   become: true
-
-- name: Generate a Self Signed OpenSSL certificate
-  openssl_certificate:
-    path: /etc/ssl/crt/ansible.com.crt
-    privatekey_path: /etc/ssl/private/ansible.com.pem
-    csr_path: /etc/ssl/csr/ansible.com.csr
-    provider: selfsigned
