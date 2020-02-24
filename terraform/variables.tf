@@ -5,6 +5,5 @@ variable "shinyapp" {
         "location"		= "westeurope"
         "admin_username"	= "admin"
         "fqdn"			= "nycvisshinyapp"
-	"azure_fqdn"		= "nycvisshinyapp.westeurope.cloudapp.azure.com"
     }
 }

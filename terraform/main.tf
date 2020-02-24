@@ -75,6 +75,10 @@ resource "azurerm_network_security_group" "shinyappnsg" {
         destination_address_prefix = "*"
     }
 }
+resource "azurerm_dns_zone" "dnszone" {
+  name                = var.shinyapp["azure_fqdn"]
+  resource_group_name = azurerm_resource_group.shinyapprg.name
+}
 
 # Create network interface
 resource "azurerm_network_interface" "shinyappnic" {
