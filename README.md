@@ -1,5 +1,5 @@
 # Shinyapp deployment
-Shiny is an R package that makes it easy to build interactive web apps straight from R. This project is all about deploying existing shiny app `NYC_Metro_Vis` link in description, usign Azure Cloud environment. 
+Shiny is an R package that makes it easy to build interactive web apps straight from R. This project is all about deploying existing shiny app `NYC_Metro_Vis` usign Azure Cloud environment and automation tools.
 
 Tools used in this project: 
 * Terraform 
@@ -11,10 +11,10 @@ Tools used in this project:
 ## Deployment
 
 ### 1. Building application
-URL of Azure Container Registry with app image: `shinyappsacr.azurecr.io/nycmetrovis`
+Definition of Docker image is created in `app/Dockerfile`. To build this image run `docker build -t nycmetrovis .` inside app folder. In this project I've configured pipeline for building this app. Every change on app folder, triggers build of docker image on Azure DevOps platform, and after successful build, image is deployed to Azure Container Registry `shinyappsacr.azurecr.io/nycmetrovis:TAG`. Definition of azure pipeline is stored in  `azure-pipelines.yml` file.
 
 ### 2. Creating infrastructure 
-Start with moving into terraform directory, then initialize project with `terraform init` cmd. You should see information similar to this `Terraform has been successfully initialized!`. Now you can create execution plan with `terraform plan` command. After a while you should see quite big output containing every resource that is planned to be deployed. In our case it's 9 resources `Plan: 9 to add, 0 to change, 0 to destroy`. Last what we have to do is to apply this plan with `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
+Inside terraform directory, initialize project with `terraform init` cmd and if you will see information similar to this `Terraform has been successfully initialized!` you can move on. Create execution plan with `terraform plan` command. After a while you should see quite big output containing every resource that is planned to be deployed. In our case it's 9 resources. Last what we have to do is to apply this plan with `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
 
 ```bash
 Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
@@ -26,14 +26,16 @@ fqdn = nycvisshinyapp.westeurope.cloudapp.azure.com
 ```
 
 ### 3. Provisioning and application deployment
-This step is fully automated with ansible playbooks. All you have to do, is to input variables from terraform to `ansible/hosts.yml` file and run `ansible-playbook -i hosts.yml deploy.yml`. This will prepare server with installation of shinyproxy, docker and ngixn with proper configuration. At the end, it will start shinyproxy and nginx service.
+This step is fully automated with ansible playbooks. First define variables in `hosts.yml` file. Public ip and fqdn you can get from terraform output or terraform.state file. If it's done just run `ansible-playbook -i hosts.yml deploy.yml` inside ansible directory. 
+
 
 ## TODO
-- [ ] Ansible role for nginx deployment
+- [x] Ansible role for nginx deployment
 - [ ] Configure terraform to parse output variables into ansible vars file.
 - [x] Create Azure DevOps pipeline for building app and deploying image to ACR.
 - [ ] Auth0.
-- [ ] Nginx SSL Proxy.
+- [x] Nginx SSL Proxy.
+- [ ] Terraform remote state storage.
 
 ## Links
 * [Shiny app used in this project](https://github.com/CodingTigerTang/NYC_Metro_Vis)
