@@ -8,15 +8,13 @@ Tools used in this project:
 * [Azure DevOps](https://dev.azure.com/damianbudelewski/shinyapp/)
 * Azure Container Registry
 
-URL of Azure Container Registry with app image: `shinyappsacr.azurecr.io/shinyapps/nycmetrovis`
-
-
 ## Deployment
 
 ### 1. Building application
+URL of Azure Container Registry with app image: `shinyappsacr.azurecr.io/nycmetrovis`
 
 ### 2. Creating infrastructure 
-Start with moving into terraform directory `cd terraform`. Initialize working directory with `terraform init` command. You should see information simmilar to this `Terraform has been successfully initialized!`. Now you can create execution plan with `terraform plan` command. After a while you should see quite big output in which you can see every resource that is planned to be deployed. In our case it's 9 resources `Plan: 9 to add, 0 to change, 0 to destroy`. Last what we have to do is to apply this plan with cmd `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
+Start with moving into terraform directory, then initialize project with `terraform init` cmd. You should see information similar to this `Terraform has been successfully initialized!`. Now you can create execution plan with `terraform plan` command. After a while you should see quite big output containing every resource that is planned to be deployed. In our case it's 9 resources `Plan: 9 to add, 0 to change, 0 to destroy`. Last what we have to do is to apply this plan with `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
 
 ```bash
 Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
