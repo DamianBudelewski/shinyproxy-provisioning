@@ -10,11 +10,15 @@ Tools used in this project:
 
 ## Deployment
 
+> **Note:**
+
+> - Authentication to ARM is done by logging into azure cli, cloning this repo and then using terraform to deploy resources. If you want to provide authentication inside terraform template, you have to add provider section inside main.tf site.
+> - Docker app image is stored on **private** Azure Container Registry.
+
 ### 1. Building application
 Definition of Docker image is created in `app/Dockerfile`. To build this image run `docker build -t nycmetrovis .` inside app folder. In this project I've configured pipeline for building this app. Every change on app folder, triggers build of docker image on Azure DevOps platform, and after successful build, image is deployed to Azure Container Registry `shinyappsacr.azurecr.io/nycmetrovis:TAG`. Definition of azure pipeline is stored in  `azure-pipelines.yml` file.
 
 ### 2. Creating infrastructure 
-`Authentication to ARM is done by logging to azure cli, cloning this repo and then using terraform to deploy resources`
 Inside terraform directory, initialize project with `terraform init` cmd and if you will see information similar to this `Terraform has been successfully initialized!` you can move on. Create execution plan with `terraform plan` command. After a while you should see quite big output containing every resource that is planned to be deployed. In our case it's 9 resources. Last what we have to do is to apply this plan with `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
 
 ```bash
