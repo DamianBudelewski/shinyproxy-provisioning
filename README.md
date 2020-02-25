@@ -47,4 +47,3 @@ This step is fully automated with ansible playbooks. First define variables in `
 * [Shiny proxy getting started documentation](https://www.shinyproxy.io/getting-started/)
 * [Example of VM deployment using terraform](https://docs.microsoft.com/en-us/azure/terraform/terraform-create-complete-vm)
 * [Terraform variables introduction](https://upcloud.com/community/tutorials/terraform-variables/)
-* [OAuth authentication](https://auth0.com/blog/adding-authentication-to-shiny-server/)
