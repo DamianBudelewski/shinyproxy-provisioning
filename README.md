@@ -11,9 +11,9 @@ Tools used in this project:
 ## Deployment
 
 > **Note:**
-
-> - Authentication to ARM is done by logging into azure cli, cloning this repo and then using terraform to deploy resources. If you want to provide authentication inside terraform template, you have to add provider section inside main.tf site.
-> - Docker app image is stored on **private** Azure Container Registry.
+>
+> - Authentication to ARM is done using **azure cli**, cloning this repo and then using terraform to deploy resources. If you want to provide authentication inside terraform template, you have to add provider section inside main.tf site.
+> - Docker app image is stored on **private** Azure Container Registry. To recreate environment deployed with ansible, you have to create your own ACR or change playbook to use docker hub instead and push your image there.
 
 ### 1. Building application
 Definition of Docker image is created in `app/Dockerfile`. To build this image run `docker build -t nycmetrovis .` inside app folder. In this project I've configured pipeline for building this app. Every change on app folder, triggers build of docker image on Azure DevOps platform, and after successful build, image is deployed to Azure Container Registry `shinyappsacr.azurecr.io/nycmetrovis:TAG`. Definition of azure pipeline is stored in  `azure-pipelines.yml` file.
