@@ -85,14 +85,6 @@
     mode: '0755'
   become: true
 
-- name: upload shinyproxy configuration file - application.yml to /opt/shinyproxy
-  template:
-    src: application.yml.j2
-    dest: /etc/shinyproxy/application.yml
-    owner: shinyproxy
-    mode: '0644'
-  become: true
-
 - name: download ShinyProxy
   get_url:
     url: https://www.shinyproxy.io/downloads/shinyproxy_2.3.0_x86_64.rpm
@@ -105,6 +97,14 @@
     state: present
   become: true
 
+- name: upload shinyproxy configuration file - application.yml to /etc/shinyproxy
+  template:
+    src: application.yml.j2
+    dest: /etc/shinyproxy/application.yml
+    owner: shinyproxy
+    mode: '0644'
+  become: true
+
 - name: install python docker module
   pip:
     name: docker
@@ -112,13 +112,15 @@
 
 - name: log into azure container registry
   docker_login:
-    registry: {{ acr_registry }}
-    username: {{ acr_username }}
-    password: {{ acr_password }}
+    registry: "{{ acr_registry }}" 
+    username: "{{ acr_username }}"
+    password: "{{ acr_password }}"
+  become: true
+  become_user: shinyproxy
 
 - name: pull shiny app docker image
   docker_image:
-    name: {{ acr_image }}
+    name: "{{ acr_image }}"
     source: pull
   become: true
   become_user: shinyproxy
@@ -140,4 +142,6 @@
 - name: log out of Azure Container Registry
   docker_login:
     state: absent
+  become: true
+  become_user: shinyproxy
 ...

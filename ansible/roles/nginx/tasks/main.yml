@@ -88,3 +88,9 @@
     name: nginx
     masked: no
   become: true
+
+- name: restart shinyproxy service 
+  systemd:
+    state: restarted
+    name: shinyproxy
+  become: true
