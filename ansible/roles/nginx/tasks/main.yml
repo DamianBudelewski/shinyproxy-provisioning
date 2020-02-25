@@ -1,3 +1,5 @@
+---
+
 - name: install nginx service
   yum:
     name: 
@@ -94,3 +96,5 @@
     state: restarted
     name: shinyproxy
   become: true
+
+...
