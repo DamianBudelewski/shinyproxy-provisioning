@@ -1,0 +1,19 @@
+all:
+  hosts:
+    shinyserver:
+      ansible_user: dbudelewski
+      ansible_host: 104.40.216.99
+      domain_name: nycvisshinyapp.westeurope.cloudapp.azure.com
+      acr_registry:
+      acr_username:
+      acr_password:
+      acr_image:
+      AUTH0_CLIENT_SECRET:
+      AUTH0_CLIENT_SECRET:
+      AUTH0_CLIENT_ID:
+      AUTH0_DOMAIN:
+      AUTH0_CALLBACK_URL:
+      COOKIE_SECRET:
+      SHINY_HOST:
+      SHINY_PORT:
+      PORT:
