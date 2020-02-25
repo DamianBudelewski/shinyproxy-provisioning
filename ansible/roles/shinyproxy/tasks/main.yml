@@ -87,7 +87,7 @@
 
 - name: upload shinyproxy configuration file - application.yml to /opt/shinyproxy
   template:
-    src: application.yml
+    src: application.yml.j2
     dest: /etc/shinyproxy/application.yml
     owner: shinyproxy
     mode: '0644'
@@ -137,7 +137,7 @@
     masked: no
   become: true
 
-- name: log out of DockerHub
+- name: log out of Azure Container Registry
   docker_login:
     state: absent
 ...

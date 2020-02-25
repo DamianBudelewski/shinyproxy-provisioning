@@ -5,6 +5,13 @@ proxy:
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
   admin-groups: admins
+  authentication: openid
+  openid:
+    auth-url: {{ auth-url }}
+    token-url: {{ token-url }}
+    jwks-ursl: {{ jwks-ursl }}
+    client-id: {{ client-id }}
+    client-secret: {{ client-secret }}
   docker:
     cert-path: /home/none
     url: http://localhost:2375
@@ -13,7 +20,7 @@ proxy:
     - id: nyc_metro_vis
       display-name: Animated NYC metro traffic
       container-cmd: ["R", "-e", "shiny::runApp('/root/nyc_metro_vis')"]
-      container-image: shinyappsacr.azurecr.io/nycmetrovis
+      container-image: shinyappsacr.azurecr.io/nycmetrovis:1
 
 server:
   useForwardHeaders: true
