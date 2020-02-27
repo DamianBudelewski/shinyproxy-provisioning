@@ -45,7 +45,7 @@ This step is fully automated with ansible playbooks. First define variables in `
 - [x] Configure Auth0.
 - [x] Nginx SSL Proxy.
 - [ ] Add Terraform remote state storage on Azure.
-- [ ] Add influxdb/grafana containers to collect and display metrics from shinyproxy
+- [x] Add influxdb/grafana containers to collect and display metrics from shinyproxy
 
 ## Links
 * [Shiny app used in this project](https://github.com/CodingTigerTang/NYC_Metro_Vis)
