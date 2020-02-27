@@ -33,6 +33,11 @@ fqdn = nycvisshinyapp.westeurope.cloudapp.azure.com
 ### 3. Provisioning and application deployment
 This step is fully automated with ansible playbooks. First define variables in `hosts.yml` file. Public ip and fqdn you can get from terraform output or terraform.state file. If it's done just run `ansible-playbook -i hosts.yml deploy.yml` inside ansible directory. Then try to access website with provided fqdn.
 
+
+## Example monitoring with Grafana
+
+[grafana dashboard](grafana.png)
+
 ## TODO
 - [x] Ansible role for nginx deployment
 - [ ] Configure terraform to parse output variables into ansible vars file.
