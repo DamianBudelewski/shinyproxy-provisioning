@@ -36,7 +36,7 @@ This step is fully automated with ansible playbooks. First define variables in `
 
 ## Example monitoring with Grafana
 
-[grafana dashboard](grafana.png)
+![grafana dashboard](grafana.png)
 
 ## TODO
 - [x] Ansible role for nginx deployment
