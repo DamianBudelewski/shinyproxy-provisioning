@@ -1,5 +1,5 @@
-# Shinyapp deployment
-Shiny is an R package that makes it easy to build interactive web apps straight from R. This project is all about deploying existing shiny app `NYC_Metro_Vis` usign Azure Cloud environment and automation tools.
+# Bitcoin Google Trends
+Shiny is an R package that makes it easy to build interactive web apps straight from R. Bitcoin is an innovative payment network and a new kind of money. Using shiny and public libraries, I've created and web app with chart presenting bitcoin value corellation with google trends *bitcoin* hits over last 5 years. In this project I've also included how to deploy infrastructure needed to run this application with terraform and ansible. 
 
 Tools used in this project: 
 * Terraform 
@@ -7,6 +7,7 @@ Tools used in this project:
 * Docker 
 * [Azure DevOps](https://dev.azure.com/damianbudelewski/shinyapp/)
 * Azure Container Registry
+* InfluxDB/Telegraf/Grafana
 
 ## Deployment
 
@@ -49,7 +50,6 @@ This step is fully automated with ansible playbooks. First define variables in `
 - [x] Add influxdb/grafana containers to collect and display metrics from shinyproxy
 
 ## Links
-* [Shiny app used in this project](https://github.com/CodingTigerTang/NYC_Metro_Vis)
 * [Shiny proxy getting started documentation](https://www.shinyproxy.io/getting-started/)
 * [Example of VM deployment using terraform](https://docs.microsoft.com/en-us/azure/terraform/terraform-create-complete-vm)
 * [Terraform variables introduction](https://upcloud.com/community/tutorials/terraform-variables/)
