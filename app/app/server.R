@@ -4,6 +4,9 @@ library(textshape)
 library(zoo)
 
 server <- function(input,output){
+
+    # Set Proxy parameters for ShinyProxy
+    setHandleParameters(user = NULL, password = NULL, domain = NULL,proxyhost = NULL, proxyport = 8080, proxyauth = 15)
     
     # Download table with price and google hits for bitcoin
     btc_value <- get_historic_price(currency = "USD", start = Sys.Date() - 1826, end = Sys.Date())
