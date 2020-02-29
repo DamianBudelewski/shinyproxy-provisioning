@@ -15,14 +15,14 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev
 
 # install required package dependencies
-RUN R -e "install.packages(c('shiny','tidyverse','leaflet','lubridate','promises','future'))"
+RUN R -e "install.packages(c('shiny','dygraphs','coindeskr','gtrendsR','textshape','zoo'))"
 
 # copy the app to the image
-RUN mkdir /root/nyc_metro_vis
-COPY app-files /root/nyc_metro_vis
+RUN mkdir /root/bitcoin_googletrends
+COPY app /root/bitcoin_googletrends
 
 COPY Rprofile.site /usr/lib/R/etc/
 
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/nyc_metro_vis')"]
+CMD ["R", "-e", "shiny::runApp('/root/bitcoin_googletrends')"]
