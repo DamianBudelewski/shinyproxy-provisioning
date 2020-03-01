@@ -1,0 +1,92 @@
+---
+
+- name: add grafana repo
+  template:
+    src: grafana.repo
+    dst: /etc/yum.repos.d/grafana.repo
+  become: true
+
+- name: add influxdb repo
+  template:
+    src: influxdb.repo
+    dst: /etc/yum.repos.d/influxdb.repo
+  become: true
+    
+- name: install influxdb
+  yum:
+    name: influxdb
+    state: present
+  become: true
+
+- name: install telegraf
+  yum:
+    name: telegraf
+    state: present
+  become: true
+
+- name: install grafana
+  yum:
+    name: grafana
+    state: present
+  become: true
+
+- name: configure telegraf
+  template:
+    src: telegraf.conf
+    dst: /etc/telegraf/telegraf.conf
+  become: true
+
+- name: configure grafana
+  template:
+    src: grafana.conf
+    dst: /etc/grafana/grafana.conf
+  become: true
+
+- name: upload grafana database
+  copy:
+    src: roles/monitoring/files/grafana.db
+    dest: /var/lib/grafana/grafana.db
+    owner: grafana
+    group: grafana
+    mode: '0644' 
+
+- name: start influxdb service
+  systemd:
+    state: started
+    name: influxdb
+  become: true
+
+- name: enable influxdb service
+  systemd:
+    enabled: yes
+    name: influxdb
+    masked: no
+  become: true
+
+- name: start grafana service
+  systemd:
+    state: started
+    name: grafana-server
+  become: true
+
+- name: enable grafana service
+  systemd:
+    enabled: yes
+    name: grafana-server
+    masked: no
+  become: true
+
+- name: start telegraf service
+  systemd:
+    state: started
+    name: telegraf
+  become: true
+
+- name: enable telegraf service
+  systemd:
+    enabled: yes
+    name: telegraf
+    masked: no
+  become: true
+
+...

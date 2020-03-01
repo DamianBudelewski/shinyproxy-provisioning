@@ -1,27 +1,29 @@
 proxy:
-  title: Animated NYC metro traffic
+  title: ShinyProxy
   port: 8080
   bind-address: 127.0.0.1
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
+  container-wait-time: 40000
+  usage-stats-url: http://localhost:8086/write?db=shinyproxy_usagestats
   admin-groups: admins
   authentication: openid
   openid:
-    auth-url: {{ auth_url }}
-    token-url: {{ token_url }}
-    jwks-url: {{ jwks_url }}
-    client-id: {{ client_id }}
-    client-secret: {{ client_secret }}
-    logout-url: {{ logout_url }}
+    auth-url: {{ shinyapp.auth_url }}
+    token-url: {{ shinyapp.token_url }}
+    jwks-url: {{ shinyapp.jwks_url }}
+    client-id: {{ shinyapp.client_id }}
+    client-secret: {{ shinyapp.client_secret }}
+    logout-url: {{ shinyapp.logout_url }}
   docker:
     cert-path: /home/none
     url: http://localhost:2375
     port-range-start: 20000
   specs:
-    - id: nyc_metro_vis
-      display-name: Animated NYC metro traffic
-      container-cmd: ["R", "-e", "shiny::runApp('/root/nyc_metro_vis')"]
-      container-image: shinyappsacr.azurecr.io/nycmetrovis:1
+    - id: bitcoingoogletrends
+      display-name: Bitcoin Google Trends Correlation Chart
+      container-cmd: ["r", "-e", "shiny::runApp('/root/bitcoin_googletrends')"]
+      container-image: shinyappsacr.azurecr.io/bitcoingoogletrends:6
 
 server:
   useForwardHeaders: true

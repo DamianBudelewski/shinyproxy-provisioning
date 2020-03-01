@@ -5,7 +5,6 @@ Shiny is an R package that makes it easy to build interactive web apps straight 
 
 ## Tech stack
 
-Tools used in this project: 
 * Terraform 
 * Ansible 
 * Docker 

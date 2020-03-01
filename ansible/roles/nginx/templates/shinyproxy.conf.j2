@@ -5,6 +5,17 @@ server {
 }
 
 server {
+  listen                10080;
+  server_name           localhost;
+
+  location /nginx_status {
+       stub_status;
+       allow 127.0.0.1; #only allow requests from localhost
+       deny all;                #deny all other hosts
+  }
+}
+
+server {
   listen                443 ssl;
   server_name           {{ domain_name }};
   access_log            /var/log/nginx/{{ domain_name }}.access.log;
