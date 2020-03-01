@@ -1,5 +1,9 @@
 # Bitcoin Google Trends Correlation Chart
-Shiny is an R package that makes it easy to build interactive web apps straight from R. Bitcoin is an innovative payment network and a new kind of money. Using shiny and public libraries, I've created web app with chart presenting bitcoin value corellation with google trends *bitcoin* hits over last 5 years. In this project I've also included how to deploy infrastructure needed to run this application with terraform and ansible. 
+Shiny is an R package that makes it easy to build interactive web apps straight from R. Bitcoin is an innovative payment network and a new kind of money. In this project I've created shiny web app with chart presenting correlation between bitcoin value and google trends for **bitcoin**. I've also included how to deploy infrastructure needed to run this application using terraform and ansible. 
+
+![bitcoin dashboard](images/bitcoin.png)
+
+## Tech stack
 
 Tools used in this project: 
 * Terraform 
@@ -13,11 +17,11 @@ Tools used in this project:
 
 > **Note:**
 >
-> - Authentication to ARM is done using **azure cli**, cloning this repo and then using terraform to deploy resources. If you want to provide authentication inside terraform template, you have to add provider section inside main.tf site.
+> - Authentication to ARM is done using **azure cli** which authenticate terraform automaticly. If you want to provide authentication inside terraform template, you have to add provider section inside main.tf site.
 > - Docker app image is stored on **private** Azure Container Registry. To recreate environment deployed with ansible, you have to create your own ACR or change playbook to use docker hub instead and push your image there.
 
 ### 1. Building application
-Definition of Docker image is created in `app/Dockerfile`. To build this image run `docker build -t nycmetrovis .` inside app folder. In this project I've configured pipeline for building this app. Every change on app folder, triggers build of docker image on Azure DevOps platform, and after successful build, image is deployed to Azure Container Registry `shinyappsacr.azurecr.io/nycmetrovis:TAG`. Definition of azure pipeline is stored in  `azure-pipelines.yml` file.
+Definition of Docker image is created in `app/Dockerfile`. To build this image run `docker build -t bitcoingoogletrends .` inside app folder. In this project I've configured pipeline for building this app. Every change on app folder, triggers build of docker image on Azure DevOps platform, and after successful build, image is deployed to Azure Container Registry `shinyappsacr.azurecr.io/bitcoingoogletrends:TAG`. Definition of azure pipeline is stored in  `azure-pipelines.yml` file.
 
 ### 2. Creating infrastructure 
 Inside terraform directory, initialize project with `terraform init` cmd and if you will see information similar to this `Terraform has been successfully initialized!` you can move on. Create execution plan with `terraform plan` command. After a while you should see quite big output containing every resource that is planned to be deployed. In our case it's 9 resources. Last what we have to do is to apply this plan with `terraform apply`. After successful deployment you should get public ip address and fqdn name of created virtual machine.
