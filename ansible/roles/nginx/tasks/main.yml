@@ -77,24 +77,4 @@
     dest: "/etc/nginx/conf.d/{{ domain_name }}.conf"
   become: true
 
-- name: restart nginx service, also issue daemon-reload to pick up config changes
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: nginx
-  become: true
-
-- name: enable nginx service on boot
-  systemd:
-    enabled: yes
-    name: nginx
-    masked: no
-  become: true
-
-- name: restart shinyproxy service 
-  systemd:
-    state: restarted
-    name: shinyproxy
-  become: true
-
 ...

@@ -3,13 +3,13 @@
 - name: add grafana repo
   template:
     src: grafana.repo
-    dst: /etc/yum.repos.d/grafana.repo
+    dest: /etc/yum.repos.d/grafana.repo
   become: true
 
 - name: add influxdb repo
   template:
     src: influxdb.repo
-    dst: /etc/yum.repos.d/influxdb.repo
+    dest: /etc/yum.repos.d/influxdb.repo
   become: true
     
 - name: install influxdb
@@ -33,13 +33,35 @@
 - name: configure telegraf
   template:
     src: telegraf.conf
-    dst: /etc/telegraf/telegraf.conf
+    dest: /etc/telegraf/telegraf.conf
+  become: true
+
+- name: allow telegraf to read nginx logs
+  file:
+    path: /var/log/nginx
+    mode: '0755'
+  become: true
+
+- name: allow telegraf to docker stats
+  user:
+    name: telegraf
+    groups: docker
+    append: yes
+  become: true
+
+- name: allow telegraf to connect to nginx on localhost on tcp port 10080
+  seport:
+    ports: 10080
+    proto: tcp
+    setype: http_port_t
+    state: present
   become: true
 
 - name: configure grafana
   template:
-    src: grafana.conf
-    dst: /etc/grafana/grafana.conf
+    src: grafana.ini
+    dest: /etc/grafana/grafana.ini
+    group: grafana
   become: true
 
 - name: upload grafana database
@@ -49,6 +71,7 @@
     owner: grafana
     group: grafana
     mode: '0644' 
+  become: true
 
 - name: start influxdb service
   systemd:
@@ -62,6 +85,10 @@
     name: influxdb
     masked: no
   become: true
+
+#- name: create influxdb database for shinyproxy statistics
+#  influxdb_database:
+#    database_name: shinyproxy_usagestats
 
 - name: start grafana service
   systemd:
@@ -87,6 +114,26 @@
     enabled: yes
     name: telegraf
     masked: no
+  become: true
+
+- name: restart nginx service, also issue daemon-reload to pick up config changes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: nginx
+  become: true
+
+- name: enable nginx service on boot
+  systemd:
+    enabled: yes
+    name: nginx
+    masked: no
+  become: true
+
+- name: restart shinyproxy service systemd
+  systemd:
+    state: restarted
+    name: shinyproxy
   become: true
 
 ...
