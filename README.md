@@ -1,5 +1,7 @@
 # Bitcoin Google Trends Correlation Chart
-Shiny is an R package that makes it easy to build interactive web apps straight from R. Bitcoin is an innovative payment network and a new kind of money. In this project I've created shiny web app with chart presenting correlation between bitcoin value and google trends for **bitcoin**. I've also included how to deploy infrastructure needed to run this application using terraform and ansible. 
+Shiny is an R package that makes it easy to build interactive web apps straight from R. Bitcoin is an innovative payment network and a new kind of money. In this project I've created shiny web app with chart presenting correlation between bitcoin value and google trends for **bitcoin** keyword. I've also included how to deploy infrastructure needed to run this application using terraform and ansible. 
+App can be accessed after signing up in auth0 at:
+> **https://btcgtrends.westeurope.cloudapp.azure.com/app/bitcoingoogletrends**
 
 <p align="center"> <img src="images/bitcoin.png" width="70%" height="70%"> </p>
 
@@ -11,6 +13,8 @@ Shiny is an R package that makes it easy to build interactive web apps straight 
 * [Azure DevOps](https://dev.azure.com/damianbudelewski/shinyapp/)
 * Azure Container Registry
 * InfluxDB/Telegraf/Grafana
+
+## 
 
 ## Deployment
 
@@ -30,8 +34,8 @@ Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-public_ip_address = 104.40.216.99
-fqdn = nycvisshinyapp.westeurope.cloudapp.azure.com
+public_ip_address = **********
+fqdn = ************
 ```
 
 ### 3. Provisioning and application deployment
