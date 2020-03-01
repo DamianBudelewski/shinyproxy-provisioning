@@ -43,7 +43,7 @@ This step is fully automated with ansible playbooks. First define variables in `
 
 
 ## Example monitoring with Grafana
-> **https://nycvisshinyapp.westeurope.cloudapp.azure.com/grafana**
+> **https://btcgtrends.westeurope.cloudapp.azure.com/grafana**
 
 ![grafana dashboard](images/grafana.png)
 
