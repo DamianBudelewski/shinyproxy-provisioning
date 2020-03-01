@@ -9,12 +9,12 @@ proxy:
   admin-groups: admins
   authentication: openid
   openid:
-    auth-url: {{ shinyapp.auth_url }}
-    token-url: {{ shinyapp.token_url }}
-    jwks-url: {{ shinyapp.jwks_url }}
-    client-id: {{ shinyapp.client_id }}
-    client-secret: {{ shinyapp.client_secret }}
-    logout-url: {{ shinyapp.logout_url }}
+    auth-url: {{ btcgtrends.auth_url }}
+    token-url: {{ btcgtrends.token_url }}
+    jwks-url: {{ btcgtrends.jwks_url }}
+    client-id: {{ btcgtrends.client_id }}
+    client-secret: {{ btcgtrends.client_secret }}
+    logout-url: {{ btcgtrends.logout_url }}
   docker:
     cert-path: /home/none
     url: http://localhost:2375
@@ -23,7 +23,7 @@ proxy:
     - id: bitcoingoogletrends
       display-name: Bitcoin Google Trends Correlation Chart
       container-cmd: ["r", "-e", "shiny::runApp('/root/bitcoin_googletrends')"]
-      container-image: shinyappsacr.azurecr.io/bitcoingoogletrends:6
+      container-image: btcgtrends.acr.azurecr.io/bitcoingoogletrends:6
 
 server:
   useForwardHeaders: true
