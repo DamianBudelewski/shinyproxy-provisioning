@@ -1,9 +1,9 @@
-variable "shinyapp" {
+variable "bitcoingtrends" {
     type = map
     default = {
-        "rg_name"		= "shinyapp-rg"
+        "rg_name"		= "btcgtrends-rg"
         "location"		= "westeurope"
         "admin_username"	= "admin"
-        "fqdn"			= "nycvisshinyapp"
+        "fqdn"			= "btcgtrends"
     }
 }
