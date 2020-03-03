@@ -36,7 +36,7 @@ resource "azurerm_virtual_network" "network" {
 
 # Create frontend subnet.
 resource "azurerm_subnet" "frontend" {
-    name                 = "back_subnet"
+    name                 = "frontend"
     resource_group_name  = azurerm_resource_group.resourcegroup.name
     virtual_network_name = azurerm_virtual_network.network.name
     address_prefix       = "10.254.0.0/24"
@@ -44,10 +44,27 @@ resource "azurerm_subnet" "frontend" {
 
 # Create backend subnet.
 resource "azurerm_subnet" "backend" {
-    name                 = "front_subnet"
+    name                 = "backend"
     resource_group_name  = azurerm_resource_group.resourcegroup.name
     virtual_network_name = azurerm_virtual_network.network.name
     address_prefix       = "10.254.2.0/24"
+}
+
+# Create backend container instance subnet.
+resource "azurerm_subnet" "backend-aci" {
+    name                 = "backend-aci"
+    resource_group_name  = azurerm_resource_group.resourcegroup.name
+    virtual_network_name = azurerm_virtual_network.network.name
+    address_prefix       = "10.254.3.0/24"
+
+    delegation {
+        name = "delegation"
+        
+        service_delegation {
+            name    = "Microsoft.ContainerInstance/containerGroups"
+            actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+        }
+    }
 }
 
 # Create public IP for application gateway
@@ -126,7 +143,7 @@ resource "azurerm_storage_account" "storageaccount" {
 }
 
 # Create virtual machines
-resource "azurerm_virtual_machine" "test" {
+resource "azurerm_virtual_machine" "vm" {
     count				= 2
     name 				= "vm${count.index}"
     resource_group_name			= azurerm_resource_group.resourcegroup.name
@@ -249,7 +266,7 @@ resource "azurerm_network_profile" "grafana" {
         
         ip_configuration {
             name      = "grafana-nic-cfg"
-            subnet_id = azurerm_subnet.backend.id
+            subnet_id = azurerm_subnet.backend-aci.id
         }
     }
 }
