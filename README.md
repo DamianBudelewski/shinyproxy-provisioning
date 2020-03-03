@@ -1,3 +1,7 @@
+# DEV
+## Testing more complex infrastructure
+<p align="center"> <img src="images/infrastructure.png" width="70%" height="70%"> </p>
+
 # Bitcoin Google Trends Correlation Chart
 Shiny is an R package that makes it easy to build interactive web apps straight from R. Bitcoin is an innovative payment network and a new kind of money. In this project I've created shiny web app with chart presenting correlation between bitcoin value and google trends for **bitcoin** keyword. I've also included how to deploy infrastructure needed to run this application using terraform and ansible. 
 App can be accessed after signing up in auth0 at:
