@@ -51,14 +51,27 @@ resource "azurerm_application_gateway" "gateway" {
         http_listener_name         	= "http"
 	redirect_configuration_name	= "http2https"
     }
+
+    ssl_certificate {
+       name		= "cert.pfx"
+       data = filebase64("cert.pfx")
+       password		= var.bitcoingtrends["password-pfx"]
+    }
+
+    ssl_policy {
+       min_protocol_version = "TLSv1_2"
+    }
+
+    redirect_configuration {
+        name = "http2https"
+	redirect_type = "Permanent"
+	target_listener_name = "https"
+	include_path = "true"
+	include_query_string = "true"
+    }
     
     frontend_ip_configuration {
         name                 = local.frontend_ip_configuration_name
-        public_ip_address_id = azurerm_public_ip.publicip.id
-    }
-
-    frontend_ip_configuration {
-        name                 = "https"
         public_ip_address_id = azurerm_public_ip.publicip.id
     }
 
@@ -81,7 +94,7 @@ resource "azurerm_application_gateway" "gateway" {
 
     http_listener {
         name                           = "https"
-        frontend_ip_configuration_name = "https"
+        frontend_ip_configuration_name = local.frontend_ip_configuration_name
         frontend_port_name             = "httpsPort"
         protocol                       = "Https"
         ssl_certificate_name		= "cert.pfx"
@@ -111,40 +124,26 @@ resource "azurerm_application_gateway" "gateway" {
         backend_http_settings_name = "http-shiny"
     }
     
-    url_path_map {
-	name				= "grafana"
-        path_rule {
-            name			= "grafana"
-            paths			= ["/grafana/*"]
-        }
-    }
+#    url_path_map {
+#	name				= "grafana"
+#        default_backend_http_settings_name	= "http-grafana"
+#        default_backend_address_pool_name	= "grafana"
+#        path_rule {
+#            name			= "grafana"
+#            paths			= ["/grafana/*"]
+#            backend_address_pool_name	= "grafana"
+#            backend_http_settings_name	= "http-grafana"
+#        }
+#    }
 
-    request_routing_rule {
-        name				= "grafana"
-        rule_type			= "PathBasedRouting"
-        url_path_map_name		= "grafana"
-        http_listener_name		= "https"
-        backend_address_pool_name	= "grafana"
-        backend_http_settings_name	= "http-grafana"
-    }
-    
-    ssl_certificate {
-       name		= "cert.pfx"
-       data = "${base64encode(file("cert.pfx"))}"
-       password		= var.bitcoingtrends["password-pfx"]
-    }
-
-    ssl_policy {
-       min_protocol_version = "TLSv1_2"
-    }
-
-    redirect_configuration {
-        name = "http2https"
-	redirect_type = "Permanent"
-	target_listener_name = "https"
-	include_path = "true"
-	include_query_string = "true"
-    }
+#    request_routing_rule {
+#        name				= "grafana"
+#        rule_type			= "PathBasedRouting"
+#        url_path_map_name		= "grafana"
+#        http_listener_name		= "https"
+#        backend_address_pool_name	= "grafana"
+#        backend_http_settings_name	= "http-grafana"
+#    }
     
     depends_on = ["azurerm_virtual_network.network", "azurerm_public_ip.publicip"]
 }
