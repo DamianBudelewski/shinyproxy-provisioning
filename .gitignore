@@ -2,5 +2,6 @@ terraform/.terraform
 terraform/*.tfstate
 terraform/*.tfstate.backup
 terraform/.terraform*
+terraform/variables.tf
 ansible/hosts.yml
 ansible/grafana.yml
