@@ -9,18 +9,18 @@ data "azurerm_public_ip" "jumpbox" {
 }
 
 output "public_ip_address" {
-    value		= data.azurerm_public_ip.publicip.ip_address
+    value		= azurerm_public_ip.publicip.ip_address
 }
 
 output "fqdn" {
-    value		= data.azurerm_public_ip.publicip.fqdn
+    value		= azurerm_public_ip.publicip.fqdn
 }
 
 output "public_ip_address-jumpbox" {
-    value		= data.azurerm_public_ip.jumpbox.ip_address
+    value		= azurerm_public_ip.jumpbox.ip_address
 }
 
 output "fqdn-jumpbox" {
-    value		= data.azurerm_public_ip.jumpbox.fqdn
+    value		= azurerm_public_ip.jumpbox.fqdn
 }
 
