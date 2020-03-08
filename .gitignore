@@ -2,4 +2,7 @@ terraform/.terraform
 terraform/*.tfstate
 terraform/*.tfstate.backup
 terraform/.terraform*
-ansible/hosts-correct.yml
+terraform/variables.tf
+terraform/cert.pfx
+ansible/hosts.yml
+ansible/grafana.yml

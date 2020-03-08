@@ -85,6 +85,14 @@
     mode: '0755'
   become: true
 
+- name: make directory for ShinyProxy logs
+  file:
+    path: /var/log/shiny
+    state: directory
+    owner: shinyproxy
+    mode: '0755'
+  become: true
+
 - name: download ShinyProxy
   get_url:
     url: https://www.shinyproxy.io/downloads/shinyproxy_2.3.0_x86_64.rpm

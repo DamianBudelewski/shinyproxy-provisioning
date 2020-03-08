@@ -1,32 +1,14 @@
 ---
 
-- name: add grafana repo
-  template:
-    src: grafana.repo
-    dest: /etc/yum.repos.d/grafana.repo
-  become: true
-
 - name: add influxdb repo
   template:
     src: influxdb.repo
     dest: /etc/yum.repos.d/influxdb.repo
   become: true
-    
-- name: install influxdb
-  yum:
-    name: influxdb
-    state: present
-  become: true
 
 - name: install telegraf
   yum:
     name: telegraf
-    state: present
-  become: true
-
-- name: install grafana
-  yum:
-    name: grafana
     state: present
   become: true
 
@@ -36,12 +18,6 @@
     dest: /etc/telegraf/telegraf.conf
   become: true
 
-- name: allow telegraf to read nginx logs
-  file:
-    path: /var/log/nginx
-    mode: '0755'
-  become: true
-
 - name: allow telegraf to docker stats
   user:
     name: telegraf
@@ -49,64 +25,16 @@
     append: yes
   become: true
 
-- name: allow telegraf to connect to nginx on localhost on tcp port 10080
-  seport:
-    ports: 10080
-    proto: tcp
-    setype: http_port_t
-    state: present
-  become: true
-
-- name: configure grafana
-  template:
-    src: grafana.ini
-    dest: /etc/grafana/grafana.ini
-    group: grafana
-  become: true
-
-- name: upload grafana database
-  copy:
-    src: roles/monitoring/files/grafana.db
-    dest: /var/lib/grafana/grafana.db
-    owner: grafana
-    group: grafana
-    mode: '0644' 
-  become: true
-
-- name: start influxdb service
-  systemd:
-    state: started
-    name: influxdb
-  become: true
-
-- name: enable influxdb service
-  systemd:
-    enabled: yes
-    name: influxdb
-    masked: no
-  become: true
-
-#- name: create influxdb database for shinyproxy statistics
-#  influxdb_database:
-#    database_name: shinyproxy_usagestats
-
-- name: start grafana service
-  systemd:
-    state: started
-    name: grafana-server
-  become: true
-
-- name: enable grafana service
-  systemd:
-    enabled: yes
-    name: grafana-server
-    masked: no
-  become: true
-
 - name: start telegraf service
   systemd:
-    state: started
+    state: restarted
     name: telegraf
+  become: true
+
+- name: start shinyproxy service
+  systemd:
+    state: restarted
+    name: shinyproxy
   become: true
 
 - name: enable telegraf service
@@ -114,26 +42,6 @@
     enabled: yes
     name: telegraf
     masked: no
-  become: true
-
-- name: restart nginx service, also issue daemon-reload to pick up config changes
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: nginx
-  become: true
-
-- name: enable nginx service on boot
-  systemd:
-    enabled: yes
-    name: nginx
-    masked: no
-  become: true
-
-- name: restart shinyproxy service systemd
-  systemd:
-    state: restarted
-    name: shinyproxy
   become: true
 
 ...
