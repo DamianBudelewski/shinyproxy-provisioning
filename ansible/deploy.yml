@@ -2,9 +2,10 @@
 
 - name: ShinyProxy installation
   gather_facts: false
-  hosts: shinyserver
+  hosts: shinyservers
   roles:
-    - shinyproxy
-    - nginx
-    - monitoring
+    - { role: shinyproxy, tags: shinyproxy }
+    - { role: monitoring, tags: monitoring }
+    - { role: common, tags: common }
+
 ...

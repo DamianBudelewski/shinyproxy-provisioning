@@ -2,6 +2,23 @@ provider "azurerm" {
   version = "= 1.33.0"
 }
 
+terraform {
+    backend "azurerm" {
+        resource_group_name	= "tfstate-rg"
+        storage_account_name	= "stacctfstate9n63x"
+        container_name		= "btc"
+        key			= "terraform.tfstate"
+    }
+}
+
+# Generate random string for jumpbox fqdn
+resource "random_string" "fqdn" {
+    length  = 6
+    special = false
+    upper   = false
+    number  = false
+}
+
 # Create a resource group if it doesnt exist
 resource "azurerm_resource_group" "resourcegroup" {
     name     = var.bitcoingtrends["rg_name"]
@@ -10,35 +27,74 @@ resource "azurerm_resource_group" "resourcegroup" {
 
 # Create virtual network
 resource "azurerm_virtual_network" "network" {
-    name                = "virtual-network"
+    name                = "vnet"
     address_space       = ["10.254.0.0/16"]
     resource_group_name = azurerm_resource_group.resourcegroup.name
     location		= azurerm_resource_group.resourcegroup.location
 }
 
 # Create frontend subnet.
-resource "azurerm_subnet" "subnet_frontend" {
-    name                 = "subnet"
+resource "azurerm_subnet" "frontend" {
+    name                 = "frontend"
     resource_group_name  = azurerm_resource_group.resourcegroup.name
     virtual_network_name = azurerm_virtual_network.network.name
     address_prefix       = "10.254.0.0/24"
 }
 
 # Create backend subnet.
-resource "azurerm_subnet" "subnet_backend" {
-    name                 = "subnet"
+resource "azurerm_subnet" "backend" {
+    name                 = "backend"
     resource_group_name  = azurerm_resource_group.resourcegroup.name
     virtual_network_name = azurerm_virtual_network.network.name
     address_prefix       = "10.254.2.0/24"
 }
 
-# Create public IPs
-resource "azurerm_public_ip" "publicip" {
-    name		= "publicip"
-    allocation_method	= "Dynamic"
-    domain_name_label	= var.bitcoingtrends["fqdn"]
+# Create backend container instance subnet.
+resource "azurerm_subnet" "backend-aci" {
+    name                 = "backend-aci"
+    resource_group_name  = azurerm_resource_group.resourcegroup.name
+    virtual_network_name = azurerm_virtual_network.network.name
+    address_prefix       = "10.254.3.0/24"
+
+    delegation {
+        name = "delegation"
+        
+        service_delegation {
+            name    = "Microsoft.ContainerInstance/containerGroups"
+            actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+        }
+    }
+}
+
+# Create Network Security Group and rule
+resource "azurerm_network_security_group" "networksecurity" {
+    name		= "nsg"
     resource_group_name	= azurerm_resource_group.resourcegroup.name
     location		= azurerm_resource_group.resourcegroup.location
+
+    security_rule {
+        name                       = "SSH"
+        priority                   = 1001
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "22"
+        source_address_prefix      = "*"
+        destination_address_prefix = "*"
+    }
+
+    security_rule {
+        name                       = "HTTP"
+        priority                   = 999
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "80"
+        source_address_prefix      = "*"
+        destination_address_prefix = "*"
+    }
 }
 
 # Create network interfaces
@@ -50,9 +106,9 @@ resource "azurerm_network_interface" "nic" {
     network_security_group_id	= azurerm_network_security_group.networksecurity.id
 
     ip_configuration {
-        name				= "nic-2-config"
-        subnet_id			= azurerm_subnet.subnet_backend.id
-	private_ip_address		= "10.254.2.${count.index}"
+        name				= "nic-config"
+        subnet_id			= azurerm_subnet.backend.id
+	private_ip_address		= "10.254.2.${count.index + 6}"
         private_ip_address_allocation	= "Static"
     }
 }
@@ -76,7 +132,7 @@ resource "azurerm_storage_account" "storageaccount" {
 }
 
 # Create virtual machines
-resource "azurerm_virtual_machine" "test" {
+resource "azurerm_virtual_machine" "vm" {
     count				= 2
     name 				= "vm${count.index}"
     resource_group_name			= azurerm_resource_group.resourcegroup.name
@@ -101,7 +157,7 @@ resource "azurerm_virtual_machine" "test" {
     }
 
     os_profile {
-        computer_name  = "btcgtrends"
+        computer_name  = "btcgtrends${count.index}"
     	admin_username = "dbudelewski"
     }
 
@@ -109,7 +165,7 @@ resource "azurerm_virtual_machine" "test" {
         disable_password_authentication = true
         ssh_keys {
             key_data	= file("~/.ssh/id_rsa.pub")
-            path	= "~/.ssh/authorized_keys"
+            path	= "/home/dbudelewski/.ssh/authorized_keys"
         }
     }
 

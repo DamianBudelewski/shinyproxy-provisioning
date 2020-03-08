@@ -1,9 +1,7 @@
 proxy:
   title: ShinyProxy
   port: 8080
-  bind-address: 127.0.0.1
   container-wait-time: 40000
-  usage-stats-url: http://localhost:8086/write?db=shinyproxy_usagestats
   admin-groups: admins
   authentication: openid
   openid:
@@ -28,4 +26,4 @@ server:
 
 logging:
   file:
-    shinyproxy.log
+    /var/log/shiny/shinyproxy.log
