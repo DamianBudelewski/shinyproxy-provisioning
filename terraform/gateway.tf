@@ -52,9 +52,28 @@ resource "azurerm_application_gateway" "gateway" {
 	redirect_configuration_name	= "http2https"
     }
 
+    request_routing_rule {
+	name				= "redirect"
+        http_listener_name         	= "https"
+        rule_type			= "PathBasedRouting"
+        url_path_map_name		= "redirect"
+    }
+
+    url_path_map {
+        name					= "redirect"
+        default_backend_address_pool_name	= "shiny"
+        default_backend_http_settings_name	= "http-shiny"
+        path_rule {
+            backend_address_pool_name		= "grafana"
+            backend_http_settings_name		= "http-grafana"
+            name				= "grafana"
+            paths				= ["/grafana"]
+        }
+    }
+
     ssl_certificate {
        name		= "cert.pfx"
-       data = filebase64("cert.pfx")
+       data		= filebase64("cert.pfx")
        password		= var.bitcoingtrends["password-pfx"]
     }
 
@@ -102,48 +121,56 @@ resource "azurerm_application_gateway" "gateway" {
 
     backend_http_settings {
         name                  = "http-shiny"
-        cookie_based_affinity = "Disabled"
+        cookie_based_affinity = "Enabled"
         port                  = "8080"
         protocol              = "Http"
-        request_timeout       = 1
+        request_timeout       = 60
     }
 
     backend_http_settings {
         name                  = "http-grafana"
-        cookie_based_affinity = "Disabled"
+        cookie_based_affinity = "Enabled"
         port                  = "3000"
         protocol              = "Http"
-        request_timeout       = 1
+        request_timeout       = 60
     }
 
-    request_routing_rule {
-        name                       = "shiny"
-        rule_type                  = "Basic"
-        http_listener_name         = "https"
-        backend_address_pool_name  = "shiny"
-        backend_http_settings_name = "http-shiny"
-    }
-    
-#    url_path_map {
-#	name				= "grafana"
-#        default_backend_http_settings_name	= "http-grafana"
-#        default_backend_address_pool_name	= "grafana"
-#        path_rule {
-#            name			= "grafana"
-#            paths			= ["/grafana/*"]
-#            backend_address_pool_name	= "grafana"
-#            backend_http_settings_name	= "http-grafana"
-#        }
-#    }
+    rewrite_rule_set {
+        name = "Grafana"
+        rewrite_rule {
+            name          = "NewRewrite"
+            rule_sequence = 100
 
-#    request_routing_rule {
-#        name				= "grafana"
-#        rule_type			= "PathBasedRouting"
-#        url_path_map_name		= "grafana"
-#        http_listener_name		= "https"
-#        backend_address_pool_name	= "grafana"
-#        backend_http_settings_name	= "http-grafana"
-#    }
+            request_header_configuration {
+                header_name  = "Host"
+                header_value = "{var_host}"
+            }
+            request_header_configuration {
+                header_name  = "X-Real-IP"
+                header_value = "{var_client_ip}"
+            }
+            request_header_configuration {
+                header_name  = "X-Forwarded-For"
+                header_value = "{var_add_x_forwarded_for_proxy}"
+            }
+            request_header_configuration {
+                header_name  = "X-Forwarded-Host"
+                header_value = "{var_host}"
+            }
+            request_header_configuration {
+                header_name  = "X-Forwarded-Proto"
+                header_value = "http"
+            }
+            request_header_configuration {
+                header_name  = "Authorization"
+                header_value = "\"\""
+            }
+            request_header_configuration {
+                header_name  = "X-WEBAUTH-USER"
+                header_value = "{var_client_user}"
+            }
+        }
+    }
     
     depends_on = ["azurerm_virtual_network.network", "azurerm_public_ip.publicip"]
 }
