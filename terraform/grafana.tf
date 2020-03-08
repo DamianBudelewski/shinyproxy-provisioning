@@ -1,10 +1,3 @@
-# Storage share for grafana instance volume
-resource "azurerm_storage_share" "grafana" {
-    name                 = "grafana"
-    storage_account_name = azurerm_storage_account.storageaccount.name
-    quota                = 1
-}
-
 # Create network profile to attach grafana instance into vnet
 resource "azurerm_network_profile" "grafana" {
     name                = "grafana-net-profile"
@@ -35,18 +28,19 @@ resource "azurerm_container_group" "grafana" {
         image  = "grafana/grafana:6.5.0"
         cpu    = "0.5"
         memory = "1.5"
-
-        volume {
-            name = "grafana-volume"
-            storage_account_name = azurerm_storage_account.storageaccount.name
-            storage_account_key = azurerm_storage_account.storageaccount.primary_access_key
-            share_name = azurerm_storage_share.grafana.name
-            mount_path = "/etc/grafana/grafana.ini"
-        }
         
         ports {
             port     = "3000"
             protocol = "TCP"
         }
+
+	volume {
+	    name = "config"
+	    mount_path = "/etc/grafana"
+	    read_only = "true"
+	    storage_account_name = azurerm_storage_account.storageaccount.name
+	    storage_account_key = azurerm_storage_account.storageaccount.primary_access_key
+	    share_name = "grafana-config"
+	}
     }
 }
