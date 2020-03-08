@@ -4,7 +4,8 @@
   gather_facts: false
   hosts: shinyservers
   roles:
-    - shinyproxy
-    - monitoring
+    - { role: shinyproxy, tags: shinyproxy }
+    - { role: monitoring, tags: monitoring }
+    - { role: common, tags: common }
 
 ...
