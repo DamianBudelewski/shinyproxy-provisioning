@@ -1,6 +1,6 @@
 proxy:
   title: ShinyProxy
-  port: 80
+  port: 8080
   container-wait-time: 40000
   admin-groups: admins
   authentication: openid
@@ -26,4 +26,4 @@ server:
 
 logging:
   file:
-    shinyproxy.log
+    /var/log/shiny/shinyproxy.log
