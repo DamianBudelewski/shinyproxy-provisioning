@@ -31,7 +31,7 @@
     name: telegraf
   become: true
 
-- name: start telegraf service
+- name: start shinyproxy service
   systemd:
     state: restarted
     name: shinyproxy
